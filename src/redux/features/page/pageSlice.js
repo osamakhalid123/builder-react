@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import { API_HOST } from "../../../api";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const initialState = {
   loading: false,
@@ -47,6 +48,7 @@ export const GetPagetest = createAsyncThunk("page/GetPage", async (Id) => {
   const data = await response.data;
   return data;
 });
+
 ///////////////////////////////////////
 
 export const GetPage = createAsyncThunk("page/GetPage", async (Id) => {

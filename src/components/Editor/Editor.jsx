@@ -1,10 +1,24 @@
-import { Alert, Box, Snackbar } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Snackbar,
+  TextField,
+} from "@mui/material";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { forwardRef, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { useAuth } from "../../context/AuthProvider";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+
+import { API_HOST } from "../../api";
+import { ClientName } from "../../redux/features/page/pageSlice";
+import GeditorConfig from "../../utils/geditorConfig";
 import { fetchAssets } from "../../redux/features/assets/assetSlice";
-import geditorConfig from "../../utils/geditorConfig";
+import { useAuth } from "../../context/AuthProvider";
 import { useState } from "react";
 
 const SnackbarAlert = forwardRef(function SnackbarAlert(props, ref) {
@@ -18,19 +32,45 @@ const Editor = () => {
   const { assets } = assetsState;
   const dispatch = useDispatch();
   const { currentUser, uploadImage } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(fetchAssets());
-  }, [dispatch]);
+  }, [uploadImage]);
+  const [name, setName] = useState("");
+  const [open, setOpen] = useState(false);
+  const [Images, setImages] = useState([]);
+
+  const HandleAddUserBtn = () => {
+    dispatch(ClientName([pageId, { customName: name }]));
+    setOpen(false);
+    setName("");
+  };
 
   useEffect(() => {
-    const editor = geditorConfig(
+    async function getallpages() {
+      try {
+        const response = await dispatch(fetchAssets());
+        setImages(response.payload);
+      } catch (error) {
+        console.log("error", error);
+      }
+    }
+    getallpages();
+  }, []);
+
+  useEffect(() => {
+    const editor = GeditorConfig(
       assets,
       pageId,
       uploadImage,
       currentUser,
       dispatch,
-      setSnackBarOpen
+      setSnackBarOpen,
+      navigate,
+      Link,
+      setOpen,
+      Images
     );
   }, [assets, pageId, uploadImage, currentUser, dispatch, setSnackBarOpen]);
 
@@ -58,6 +98,40 @@ const Editor = () => {
           Page saved successfully!
         </SnackbarAlert>
       </Snackbar>
+
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        // TransitionComponent={Transition}
+      >
+        <DialogTitle>Add User</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Please Add the User Conected to The page
+          </DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="User Name"
+            type="text"
+            fullWidth
+            variant="standard"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpen(false)}>Cancel</Button>
+          <Button
+            onClick={() => {
+              HandleAddUserBtn();
+            }}
+          >
+            Add
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

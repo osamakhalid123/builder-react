@@ -20,3 +20,59 @@ html, body{
 ::-webkit-scrollbar {
   display: none;
 }
+
+
+
+.fa-square-o{
+  display: none;
+}
+
+.fa-paint-brush{
+  position: absolute;
+  right: 0;
+  
+  margin: 0 20px;
+}
+
+.fa-th-large{
+  margin-right: 100px;
+}
+
+
+.fa-times{
+  display: flex;
+  position: absolute;
+  right: 600px;
+  font-size: 25px;
+}
+.fa-times:hover{
+  color:red;
+}
+
+
+.fa-user-plus{
+  display: flex;
+  position: absolute;
+  right: 500px;
+  font-size: 20px;
+}
+
+
+.fa-cog{
+  display: flex;
+  position: relative;
+  left: 65px;
+}
+
+.fa-bars{
+  display: flex;
+  position: relative;
+  // left:45px;
+}
+
+.fa-th-large{
+  display: flex;
+  position: relative;
+  right: 65px;
+  
+}

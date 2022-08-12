@@ -5,7 +5,11 @@ export const RequireAuth = ({ children }) => {
   const isLogged = localStorage.getItem("uid");
 
   if (!isLogged) {
-    return <Navigate to="/login" state={{ path: location.pathname }} />;
+    return (
+      <>
+        <Navigate to="/login" state={{ path: location.pathname }} />
+      </>
+    );
   }
 
   return children;

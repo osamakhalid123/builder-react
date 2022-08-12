@@ -7,20 +7,21 @@ import {
   Tab,
   Typography,
 } from "@mui/material";
+import { Link, useOutletContext } from "react-router-dom";
+import React, { useState } from "react";
+
+import { AccountSettings } from "./AccountSettings";
+import BrushOutlinedIcon from "@mui/icons-material/BrushOutlined";
+import { PagesSettings } from "./PagesSettings";
+import PersonIcon from "@mui/icons-material/Person";
+import { ProfileSettings } from "./ProfileSettings";
+import SettingsIcon from "@mui/icons-material/Settings";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
-import React, { useState } from "react";
-import { Link, useOutletContext } from "react-router-dom";
-import PersonIcon from "@mui/icons-material/Person";
-import SettingsIcon from "@mui/icons-material/Settings";
-import BrushOutlinedIcon from "@mui/icons-material/BrushOutlined";
-import { ProfileSettings } from "./ProfileSettings";
-import { AccountSettings } from "./AccountSettings";
-import { PagesSettings } from "./PagesSettings";
 
 export const Settings = () => {
-  const [tabValue, setTabValue] = useState("1");
+  const [tabValue, setTabValue] = useState("3");
 
   const {
     userUid,
@@ -89,7 +90,7 @@ export const Settings = () => {
                     icon={<PersonIcon />}
                     iconPosition="start"
                     component={Link}
-                    to="profile"
+                    to="Pages"
                     sx={{
                       justifyContent: "flex-start",
                       minHeight: "fit-content",
@@ -113,7 +114,7 @@ export const Settings = () => {
                     icon={<BrushOutlinedIcon />}
                     iconPosition="start"
                     component={Link}
-                    to="pages"
+                    to="Pages"
                     sx={{
                       justifyContent: "flex-start",
                       minHeight: "fit-content",
@@ -132,7 +133,6 @@ export const Settings = () => {
                     userUid={userUid}
                   />
                 </TabPanel>
-
                 <TabPanel
                   value="2"
                   sx={{ padding: { sm: "0 0 0 24px", xs: "24px 0 0 0" } }}

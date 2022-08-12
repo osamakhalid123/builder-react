@@ -4,27 +4,37 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useParams } from "react-router-dom";
 
 import parse from "html-react-parser";
+import { useAuth } from "../../context/AuthProvider";
 
-export const ViewPage = ({ title, userUid }) => {
+export const ViewPage = ({ title }) => {
   const dispatch = useDispatch();
   const pageState = useSelector((state) => state.page);
   const { pages } = pageState;
-  const { customName } = useParams();
+  const { customName, id } = useParams();
   const location = useLocation();
-  const userPages = pages.filter((page) => page.userId === userUid);
+  ////////////////////////////////////////////////////////////////
 
-  const getpageId = pages.filter((page) => page._id === location.state.prop);
+  const userState = useSelector((state) => state.user);
+  const { currentUser } = useAuth();
+
+  //////////////////////////////////////////////////////////////////
+  // const userPages = pages.filter((page) => page.userId === userUid);
+  // const getpageId = pages.filter((page) => page._id === location.state);
+  const getpageId = pages.filter((page) => page._id === id);
 
   useEffect(() => {
+    // console.log(location.state); s
+    console.log(id);
     document.title = title;
     dispatch(fetchPages());
-    dispatch(GetPage(location.state.prop));
-  }, [title, dispatch, location.state.prop]);
+    dispatch(GetPage(id));
+  }, [title, dispatch, id]);
+  // }, [title, dispatch, location.state]);
 
   return (
     <>
       {getpageId.map((page) => {
-        return parse(page.view.HTML);
+        return <div key={page._id}>{parse(page.view.HTML)}</div>;
       })}
 
       {getpageId.map((page) => {

@@ -17,6 +17,7 @@ import React, { forwardRef, useEffect, useState } from "react";
 import { createPage } from "../../../redux/features/page/pageSlice";
 import { useAuth } from "../../../context/AuthProvider";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const SnackbarAlert = forwardRef(function SnackbarAlert(props, ref) {
   return <Alert ref={ref} elevation={2} {...props} />;
@@ -37,6 +38,7 @@ export const AddPage = ({ pageState }) => {
   const { currentUser } = useAuth();
   const { pages } = pageState;
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     setTimeout(() => {
@@ -65,6 +67,10 @@ export const AddPage = ({ pageState }) => {
     setSnackBarOpen(true);
     setName("");
     setIsDuplicated(false);
+
+    setTimeout(() => {
+      navigate("/dashboard/settings/pages");
+    }, 800);
   };
 
   return (

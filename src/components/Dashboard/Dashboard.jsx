@@ -1,13 +1,14 @@
 import { Box, Grid, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { fetchPages } from "../../redux/features/page/pageSlice";
-import { Navbar } from "./components/NavBar";
-import { useAuth } from "../../context/AuthProvider";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 import { AddPage } from "./components/AddPage";
-import { ControlPages } from "./components/ControlPages";
 import { Container } from "@mui/system";
+import { ControlPages } from "./components/ControlPages";
+import { Navbar } from "./components/NavBar";
+import { fetchPages } from "../../redux/features/page/pageSlice";
+import { useAuth } from "../../context/AuthProvider";
 
 export const Dashboard = ({ title }) => {
   const [userUid, setUserUid] = useState("");
@@ -60,6 +61,8 @@ export const Dashboard = ({ title }) => {
         <Navbar userName={userName} avatar={avatar} />
         {location.pathname === "/dashboard" ? (
           <Container>
+            {/* bgcolor: "primary.main", width: 250, p: 1 */}
+            <Typography sx={{ my: 5 }}>User Name:{userName}</Typography>
             <Grid container spacing={3} p={2}>
               <Grid item xs={12} sm={6}>
                 <AddPage pageState={pageState} />

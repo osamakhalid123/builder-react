@@ -24,7 +24,9 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { TextField } from "@mui/material";
+import { createPage } from "../../../redux/features/page/pageSlice.js";
 import moment from "moment";
+import { useAuth } from "../../../context/AuthProvider.js";
 import { useDispatch } from "react-redux";
 
 //////////////////////////////////////////////////////
@@ -55,23 +57,43 @@ export const PagesSettings = ({ userUid, pageState }) => {
   const [snackBarOpen, setSnackBarOpen] = useState(false);
   const [show, setShow] = useState(false);
 
+  const [openNewPage, setopenNewPage] = useState(false);
+
+  const [nameNewPage, setnameNewPage] = useState("");
   const [clienPagetid, setclienPagetid] = useState("");
+  const { currentUser } = useAuth();
 
   const HandleUser = () => {
     dispatch(ClientName([clienPagetid, { customName: name }]));
     setOpen(false);
     setName("");
+    setTimeout(() => {
+      window.location.reload();
+    }, 700);
   };
 
-  // if (clienPagetid) {
-  //   // 👇️ delete each query param
-  //          searchParams.delete(clienPagetid)
-  //   // 👇️ update state after
-  //         setSearchParams(searchParams)
-  // }
+  /////////////////////////////////////////////////////////////////////
+  const handleSubmitNewPage = async (e) => {
+    e.preventDefault();
+    if (!nameNewPage) {
+      setIsValid(false);
+      return;
+    }
+    const userPages = pages.filter((page) => page.userId === currentUser._id);
+    if (userPages.find((page) => page.name === nameNewPage)) {
+      setIsDuplicated(true);
+      return;
+    }
+    const pageInfo = {
+      name: nameNewPage,
+      userId: currentUser._id,
+    };
 
-  const test = {
-    name: userUid,
+    setopenNewPage(false);
+    dispatch(createPage(pageInfo));
+    // setSnackBarOpen(true);
+    setName("");
+    setIsDuplicated(false);
   };
 
   ///////////////////////////////////////////////////////////
@@ -112,6 +134,9 @@ export const PagesSettings = ({ userUid, pageState }) => {
           <TableHead>
             <TableRow>
               <TableCell sx={{ fontWeight: 600 }}>Title</TableCell>
+              {/* ///////////////////////////////////////////////////////////////// */}
+
+              {/* ////////////////////////////////////////////////////////////////////////////   */}
               <TableCell
                 sx={{
                   fontWeight: 600,
@@ -128,6 +153,52 @@ export const PagesSettings = ({ userUid, pageState }) => {
               >
                 Last Modified
               </TableCell>
+
+              <TableCell sx={{ fontWeight: 600 }}>
+                <Button onClick={() => setopenNewPage(true)}>
+                  Create new Page
+                </Button>
+
+                <Dialog
+                  open={openNewPage}
+                  onClose={() => setopenNewPage(false)}
+                  TransitionComponent={Transition}
+                >
+                  <DialogTitle>Create Page</DialogTitle>
+                  <DialogContent>
+                    <DialogContentText>
+                      To create new page, please enter the page title here. By
+                      creating this page you agree to our privacy and policy of
+                      pages.
+                    </DialogContentText>
+                    <TextField
+                      autoFocus
+                      margin="dense"
+                      id="nameNewPage"
+                      label="Page Title"
+                      type="text"
+                      fullWidth
+                      variant="standard"
+                      value={nameNewPage}
+                      onChange={(e) => setnameNewPage(e.target.value)}
+                      error={!isValid || isDuplicated}
+                      helperText={
+                        !isValid
+                          ? "Please provide a valid name."
+                          : isDuplicated
+                          ? "Page already exist."
+                          : null
+                      }
+                    />
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={() => setopenNewPage(false)}>
+                      Cancel
+                    </Button>
+                    <Button onClick={handleSubmitNewPage}>Create</Button>
+                  </DialogActions>
+                </Dialog>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -140,7 +211,7 @@ export const PagesSettings = ({ userUid, pageState }) => {
                   <Box>
                     <Typography sx={{ display: "inline-block" }}>
                       {page.name}
-                    </Typography>{" "}
+                    </Typography>
                     ({page.slug})
                   </Box>
                   <Stack direction={"row"} spacing={1} alignItems="center">
@@ -165,10 +236,13 @@ export const PagesSettings = ({ userUid, pageState }) => {
                     <Link
                       to={{
                         pathname: `${
-                          page.customName ? `/view/${page.customName}` : "/view"
+                          page.customName
+                            ? `/view/${page.customName}/${page._id}`
+                            : `/view/${page._id}`
                         }`,
                       }}
-                      state={{ prop: `${page._id}` }}
+                      // state={`${page._id}`}
+                      // state={{ id: `${page._id}` }}
                       style={{ color: "blue", textDecoration: "none" }}
                     >
                       View

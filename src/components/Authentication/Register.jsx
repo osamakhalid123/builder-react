@@ -1,36 +1,38 @@
 import {
-  TextField,
-  Typography,
-  Link,
-  InputAdornment,
-  IconButton,
+  Alert,
   Avatar,
   Box,
-  FormControlLabel,
+  Button,
   Checkbox,
   Container,
-  Stack,
-  Snackbar,
-  Alert,
-  Button,
-  RadioGroup,
-  Radio,
   FormControl,
+  FormControlLabel,
   FormLabel,
-  Select,
+  IconButton,
+  InputAdornment,
+  Link,
   MenuItem,
+  Radio,
+  RadioGroup,
+  Select,
+  Snackbar,
+  Stack,
+  TextField,
+  Typography,
 } from "@mui/material";
 import React, { forwardRef, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { DatePicker } from "@mui/x-date-pickers";
+import { LocalizationProvider } from "@mui/x-date-pickers";
 import PeopleIcon from "@mui/icons-material/People";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { motion } from "framer-motion";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import { DatePicker } from "@mui/x-date-pickers";
 import { createUser } from "../../redux/features/user/userSlice";
 import moment from "moment";
+import { motion } from "framer-motion";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const boxVariants = {
   hidden: {
@@ -192,6 +194,7 @@ export const Register = ({ title }) => {
 
     setLoading(false);
   };
+  const navigate = useNavigate();
 
   return (
     <Container component="main" maxWidth="xs">
@@ -386,6 +389,11 @@ export const Register = ({ title }) => {
             component={motion.button}
             variants={boxVariants}
             whileTap="tap"
+            onClick={() => {
+              setTimeout(() => {
+                navigate("/login");
+              }, 1000);
+            }}
           >
             Register
           </Button>
